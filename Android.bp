@@ -1,0 +1,101 @@
+// Auto-generated prebuilt Blueprint for external/vixl
+// Dual-slice extractive shadow (target bionic + host glibc)
+
+package {
+    default_applicable_licenses: ["external_vixl_license"],
+}
+
+license {
+    name: "external_vixl_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-BSD",
+    ],
+    license_text: [
+        "LICENCE",
+    ],
+}
+
+cc_prebuilt_library {
+    name: "libvixl",
+    vendor_available: true,
+    product_available: true,
+    recovery_available: true,
+    host_supported: true,
+    check_elf_files: false,
+    export_include_dirs: [
+        "include",
+    ],
+    prefer: true,
+    apex_available: [
+        "//apex_available:anyapex",
+        "//apex_available:platform",
+        "com.android.art",
+        "com.android.art.debug",
+    ],
+    min_sdk_version: "S",
+    target: {
+        host: {
+            shared: { srcs: ["host/lib64/libvixl.so"] },
+            static: { srcs: ["host/lib64/libvixl.a"] },
+        },
+        android: {
+            shared: { srcs: ["target/lib64/libvixl.so"] },
+            static: { srcs: ["target/lib64/libvixl.a"] },
+        },
+    },
+}
+
+cc_prebuilt_library {
+    name: "libvixld",
+    vendor_available: true,
+    product_available: true,
+    recovery_available: true,
+    host_supported: true,
+    check_elf_files: false,
+    export_include_dirs: [
+        "include",
+    ],
+    prefer: true,
+    apex_available: [
+        "//apex_available:anyapex",
+        "//apex_available:platform",
+        "com.android.art",
+        "com.android.art.debug",
+    ],
+    min_sdk_version: "S",
+    target: {
+        host: {
+            shared: { srcs: ["host/lib64/libvixld.so"] },
+            static: { srcs: ["host/lib64/libvixld.a"] },
+        },
+        android: {
+            shared: { srcs: ["target/lib64/libvixld.so"] },
+            static: { srcs: ["target/lib64/libvixld.a"] },
+        },
+    },
+}
+
+cc_prebuilt_binary {
+    name: "vixl-test-runner",
+    device_supported: false,
+    host_supported: true,
+    arch: {
+        x86_64: {
+            srcs: ["host/bin/vixl-test-runner"],
+        },
+    },
+}
+
+cc_genrule {
+    name: "vixl-test-timestamp",
+    srcs: [
+        ":libc++",
+        ":vixl-test-runner",
+    ],
+    compile_multilib: "first",
+    host_supported: true,
+    device_supported: false,
+    cmd: "touch $(genDir)/vixl-test-timestamp.txt",
+    out: ["vixl-test-timestamp.txt"],
+}
